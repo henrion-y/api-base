@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"api-base/domain/model"
 	"context"
+	"github.com/henrion-y/api-base/domain/model"
 )
 
 type BaseRepository interface {

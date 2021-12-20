@@ -1,8 +1,8 @@
 package gorm
 
 import (
-	"api-base/database/gorm"
 	"context"
+	"github.com/henrion-y/api-base/database/gorm"
 	_gorm "github.com/jinzhu/gorm"
 	"log"
 	"testing"

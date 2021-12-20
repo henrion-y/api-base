@@ -1,9 +1,9 @@
 package redis
 
 import (
-	"api-base/cache"
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
+	"github.com/henrion-y/api-base/cache"
 	"reflect"
 	"time"
 )

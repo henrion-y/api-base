@@ -1,9 +1,9 @@
 package gorm
 
 import (
-	"api-base/domain/model"
-	"api-base/domain/repository"
 	"context"
+	"github.com/henrion-y/api-base/domain/model"
+	"github.com/henrion-y/api-base/domain/repository"
 	"github.com/jinzhu/gorm"
 )
 

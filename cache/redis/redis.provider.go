@@ -1,9 +1,9 @@
 package redis
 
 import (
-	"api-base/cache"
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/henrion-y/api-base/cache"
 	"time"
 )
 

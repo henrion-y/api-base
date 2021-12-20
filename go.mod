@@ -1,4 +1,4 @@
-module api-base
+module github.com/henrion-y/api-base
 
 go 1.14
 

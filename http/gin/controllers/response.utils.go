@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"api-base/http/errors"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/henrion-y/api-base/http/errors"
 	"net/http"
 	"strings"
 )
