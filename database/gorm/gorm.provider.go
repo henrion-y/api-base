@@ -17,7 +17,7 @@ type DataBase struct {
 	Charset  string
 }
 
-func NewDbProvider(config DataBase) (*gorm.DB, error) {
+func NewDbProvider(config *DataBase) (*gorm.DB, error) {
 
 	if len(config.Driver) == 0 {
 		return nil, errors.New("driver is empty")

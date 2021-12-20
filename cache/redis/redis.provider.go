@@ -16,7 +16,7 @@ type Redis struct {
 	CacheTimeOut int
 }
 
-func NewRedisProvider(config Redis) (cache.Cache, error) {
+func NewRedisProvider(config *Redis) (cache.Cache, error) {
 	redisConn := &redis.Pool{
 		MaxIdle:     config.MaxIdle,
 		MaxActive:   config.MaxActive,
