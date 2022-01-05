@@ -1,33 +1,37 @@
 package redis
 
 import (
+	"errors"
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/henrion-y/api-base/cache"
+	"github.com/spf13/viper"
 	"time"
 )
 
-type Redis struct {
-	Host         string
-	Password     string
-	MaxIdle      int
-	MaxActive    int
-	IdleTimeout  time.Duration
-	CacheTimeOut int
-}
+func NewRedisProvider(config *viper.Viper) (cache.Cache, error) {
 
-func NewRedisProvider(config *Redis) (cache.Cache, error) {
+	host := config.GetString("redis.Host")
+	password := config.GetString("redis.Password")
+	maxIdle := config.GetInt("redis.MaxIdle")
+	maxActive := config.GetInt("redis.MaxActive")
+	idleTimeout := config.GetInt("redis.IdleTimeout")
+	//cacheTimeOut := config.GetInt("redis,CacheTimeOut")
+	if len(host) == 0 {
+		return nil, errors.New("host  is empty")
+	}
+
 	redisConn := &redis.Pool{
-		MaxIdle:     config.MaxIdle,
-		MaxActive:   config.MaxActive,
-		IdleTimeout: config.IdleTimeout,
+		MaxIdle:     maxIdle,
+		MaxActive:   maxActive,
+		IdleTimeout: time.Duration(idleTimeout),
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", config.Host)
+			c, err := redis.Dial("tcp", host)
 			if err != nil {
 				return nil, err
 			}
-			if config.Password != "" {
-				if _, err := c.Do("AUTH", config.Password); err != nil {
+			if password != "" {
+				if _, err := c.Do("AUTH", password); err != nil {
 					c.Close()
 					return nil, err
 				}
