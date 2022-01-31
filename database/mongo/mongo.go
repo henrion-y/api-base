@@ -3,7 +3,6 @@ package mongo
 import (
 	"context"
 	"errors"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,22 +11,11 @@ import (
 	"log"
 )
 
-type DataBase struct {
-	Host     string
-	User     string
-	Password string
-	Db       string
-	Charset  string
-}
-
 func NewDbProvider(config *viper.Viper) (*mongo.Database, error) {
 
-	user := config.GetString("mongo.User")
-	password := config.GetString("mongo.Password")
-
-	host := config.GetString("mongo.Host")
+	host := config.GetStringSlice("mongo.Hosts")
 	if len(host) == 0 {
-		return nil, errors.New("host is empty")
+		return nil, errors.New("hosts is empty")
 	}
 
 	db := config.GetString("mongo.DB")
@@ -35,19 +23,24 @@ func NewDbProvider(config *viper.Viper) (*mongo.Database, error) {
 		return nil, errors.New("db is empty")
 	}
 
-	var applyURI string
+	opt := options.Client()
+	opt.Hosts = host
+
+	user := config.GetString("mongo.User")
 	if user != "" {
-		applyURI = fmt.Sprintf("mongodb://%s:%s@%s", user, password, host)
-	} else {
-		applyURI = fmt.Sprintf("mongodb://%s", host)
+		password := config.GetString("mongo.Password")
+		authSource := config.GetString("mongo.AuthSource")
+		opt.SetAuth(options.Credential{
+			AuthSource: authSource,
+			Username:   user,
+			Password:   password,
+		})
 	}
 
-	opts := options.Client().ApplyURI(applyURI)
-
 	// 连接数据库
-	client, err := mongo.Connect(context.Background(), opts)
+	client, err := mongo.Connect(context.Background(), opt)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// 判断服务是不是可用
