@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"log"
 )
 
 func NewDbProvider(config *viper.Viper) (*mongo.Database, error) {
@@ -44,8 +43,9 @@ func NewDbProvider(config *viper.Viper) (*mongo.Database, error) {
 	}
 
 	// 判断服务是不是可用
-	if err = client.Ping(context.Background(), readpref.Primary()); err != nil {
-		log.Fatal(err)
+	err = client.Ping(context.Background(), readpref.Primary())
+	if err != nil {
+		return nil, err
 	}
 
 	// 获取数据库和集合
