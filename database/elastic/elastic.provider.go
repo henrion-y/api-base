@@ -8,12 +8,14 @@ import (
 
 func NewElasticProvider(config *viper.Viper) (*elastic.Client, error) {
 
-	host := config.GetString("elastic.host")
+	host := config.GetString("elastic.Host")
 	if len(host) == 0 {
 		return nil, errors.New("host is empty")
 	}
 
-	elasticClient, err := elastic.NewClient(elastic.SetURL(host))
+	setSniff := config.GetBool("elastic.SetSniff")
+
+	elasticClient, err := elastic.NewClient(elastic.SetSniff(setSniff), elastic.SetURL(host))
 	if err != nil {
 		return nil, err
 	}
