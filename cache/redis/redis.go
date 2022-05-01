@@ -5,7 +5,6 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/henrion-y/api-base/cache"
 	"reflect"
-	"time"
 )
 
 type Cache struct {
@@ -64,7 +63,7 @@ func (m *Cache) BatchGet(keys []string, resultsPtr interface{}) error {
 	return nil
 }
 
-func (m *Cache) Set(key string, value interface{}, expiry time.Duration) error {
+func (m *Cache) Set(key string, value interface{}, expireTs uint) error {
 
 	c := m.r.Get()
 	defer c.Close()
@@ -74,11 +73,16 @@ func (m *Cache) Set(key string, value interface{}, expiry time.Duration) error {
 		return err
 	}
 
-	_, err = c.Do("SET", key, expiry.Seconds(), data)
+	if expireTs > 0 {
+		_, err = c.Do("SETEX", key, expireTs, value)
+	} else {
+		_, err = c.Do("SET", key, data)
+	}
 	return err
+
 }
 
-func (m *Cache) SetNX(key string, value interface{}, expiry time.Duration) error {
+func (m *Cache) SetNX(key string, value interface{}, expiryTs uint) error {
 
 	c := m.r.Get()
 	defer c.Close()
@@ -88,7 +92,7 @@ func (m *Cache) SetNX(key string, value interface{}, expiry time.Duration) error
 		return err
 	}
 
-	_, err = c.Do("SETNX", key, expiry.Seconds(), data)
+	_, err = c.Do("SETNX", key, expiryTs, data)
 	return err
 }
 
