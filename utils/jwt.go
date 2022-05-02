@@ -12,6 +12,7 @@ import (
 type AuthService interface {
 	CreateToken(claims *Claims) (string, error)
 	ParseToken(signedToken string) (*Claims, error)
+	GetClaimsByGinCtx(ctx *gin.Context) (*Claims, error)
 }
 
 type JwtUserInfo struct {
