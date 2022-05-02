@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"time"
 )
@@ -75,4 +76,16 @@ func (s *JWTService) ParseToken(signedToken string) (*Claims, error) {
 	}
 
 	return nil, errors.New("校验失败")
+}
+
+func (s *JWTService) GetClaimsByGinCtx(ctx *gin.Context) (*Claims, error) {
+	claims, exist := ctx.Get("claims")
+	if !exist {
+		return nil, errors.New("is nil")
+	}
+	jwtClaims, ok := claims.(*Claims)
+	if !ok {
+		return nil, errors.New("not claims")
+	}
+	return jwtClaims, nil
 }
