@@ -16,10 +16,10 @@ type AuthService interface {
 }
 
 type JwtUserInfo struct {
-	UserId       string `json:"user_id"`              // 用户id
-	UserType     string `json:"user_type"`            // 用户类型
-	Username     string `gorm:"column:user_name"`     // 昵称
-	HeadPortrait string `gorm:"column:head_portrait"` // 像头
+	UserId       string `json:"user_id"`       // 用户id
+	UserType     string `json:"user_type"`     // 用户类型
+	Username     string `json:"user_name"`     // 昵称
+	HeadPortrait string `json:"head_portrait"` // 像头
 }
 
 // Claims custom token
