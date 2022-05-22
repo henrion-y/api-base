@@ -9,12 +9,7 @@ import (
 
 func getCache() geo.Geo {
 	conf := viper.New()
-	conf.Set("redis.Host", "124.220.187.26:16379")
-	conf.Set("redis.Password", "Zi5JgFOngJyymf2i")
-	conf.Set("redis.MaxIdle", 30)
-	conf.Set("redis.MaxActive", 30)
-	conf.Set("redis.IdleTimeout", 30)
-	conf.Set("redis.CacheTimeOut", 10)
+
 	cacheRdb, err := NewRedisProvider(conf)
 	if err != nil {
 		panic(err)
@@ -97,5 +92,13 @@ func TestGeo_RadiusByName(t *testing.T) {
 	}
 	for i := 0; i < len(members); i++ {
 		t.Log(members[i])
+	}
+}
+
+func TestGeo_Del(t *testing.T) {
+	rdb := getCache()
+	err := rdb.Del("geo:city", "fuyang")
+	if err != nil {
+		t.Fatal(err)
 	}
 }

@@ -14,13 +14,6 @@ type Geo struct {
 	pool *redis.Pool
 }
 
-// NewGeo creates a Geo service
-func NewGeo(pool *redis.Pool) *Geo {
-	return &Geo{
-		pool: pool,
-	}
-}
-
 // Add adds key and related meta data to redis
 func (s *Geo) Add(key string, data []*geo.Member) error {
 	conn := s.pool.Get()
@@ -147,4 +140,19 @@ func (s *Geo) Hash(key string, list ...string) ([]string, error) {
 		hashs[i] = hash
 	}
 	return hashs, nil
+}
+
+// Del 删除地理位置
+func (s *Geo) Del(key string, names ...string) error {
+	conn := s.pool.Get()
+	defer conn.Close()
+
+	for _, name := range names {
+		_, err := conn.Do("ZREM", key, name)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
