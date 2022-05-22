@@ -2,21 +2,15 @@ package gorm
 
 import (
 	"context"
-	"github.com/henrion-y/api-base/database/gorm"
-	_gorm "github.com/jinzhu/gorm"
 	"log"
 	"testing"
 	"time"
-)
 
-var dbConfig = gorm.DataBase{
-	Driver:   "mysql",
-	Host:     "127.0.0.1:3306",
-	User:     "root",
-	Password: "123456",
-	Db:       "test_projects",
-	Charset:  "utf8",
-}
+	"github.com/spf13/viper"
+
+	"github.com/henrion-y/api-base/database/gorm"
+	_gorm "github.com/jinzhu/gorm"
+)
 
 type User struct {
 	ID    int        `json:"id" gorm:"primary_key"`
@@ -32,7 +26,9 @@ func (t User) TableName() string {
 }
 
 func getDB() (*_gorm.DB, error) {
-	db, err := gorm.NewDbProvider(dbConfig)
+	conf := viper.New()
+
+	db, err := gorm.NewDbProvider(conf)
 	if err != nil {
 		log.Fatal("数据库连接失败")
 		return nil, err
@@ -42,7 +38,6 @@ func getDB() (*_gorm.DB, error) {
 }
 
 func TestBaseRepository_Create(t *testing.T) {
-
 	db, err := getDB()
 	if err != nil {
 		t.Fatal(err)
@@ -82,11 +77,9 @@ func TestBaseRepository_Create(t *testing.T) {
 
 		t.Log("插入记录成功")
 	}
-
 }
 
 func TestBaseRepository_FindOne(t *testing.T) {
-
 	db, err := getDB()
 	if err != nil {
 		t.Fatal(err)
@@ -103,7 +96,6 @@ func TestBaseRepository_FindOne(t *testing.T) {
 }
 
 func TestBaseRepository_MultiGet(t *testing.T) {
-
 	db, err := getDB()
 	if err != nil {
 		t.Fatal(err)
@@ -118,7 +110,6 @@ func TestBaseRepository_MultiGet(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(users)
-
 }
 
 func TestBaseRepository_MultiGetByPage(t *testing.T) {
@@ -141,7 +132,6 @@ func TestBaseRepository_MultiGetByPage(t *testing.T) {
 }
 
 func TestBaseRepository_Update(t *testing.T) {
-
 	db, err := getDB()
 	if err != nil {
 		t.Fatal(err)
@@ -160,7 +150,6 @@ func TestBaseRepository_Update(t *testing.T) {
 }
 
 func TestBaseRepository_Count(t *testing.T) {
-
 	db, err := getDB()
 	if err != nil {
 		t.Fatal(err)
@@ -177,7 +166,6 @@ func TestBaseRepository_Count(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(count)
-
 }
 
 func TestBaseRepository_Delete(t *testing.T) {
@@ -200,5 +188,4 @@ func TestBaseRepository_Delete(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 }

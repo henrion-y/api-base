@@ -3,10 +3,11 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	"time"
 )
 
 type AuthService interface {
@@ -68,7 +69,6 @@ func (s *JWTService) ParseToken(signedToken string) (*Claims, error) {
 			}
 			return []byte(s.Secret), nil
 		})
-
 	if err != nil {
 		return nil, err
 	}

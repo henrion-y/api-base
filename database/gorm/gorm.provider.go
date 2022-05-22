@@ -3,14 +3,14 @@ package gorm
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
-	"time"
 )
 
 func NewDbProvider(config *viper.Viper) (*gorm.DB, error) {
-
 	driver := config.GetString("database.Driver")
 	if len(driver) == 0 {
 		return nil, errors.New("driver is empty")

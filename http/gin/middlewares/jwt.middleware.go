@@ -1,10 +1,11 @@
 package middlewares
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/henrion-y/api-base/utils"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/henrion-y/api-base/utils"
 )
 
 type JWTAuthMiddleware struct {
@@ -24,11 +25,11 @@ func (m *JWTAuthMiddleware) Handler() gin.HandlerFunc {
 				"code":    -1,
 				"message": "无权限访问，请求未携带token",
 			})
-			ctx.Abort() //结束后续操作
+			ctx.Abort() // 结束后续操作
 			return
 		}
 
-		//按空格拆分
+		// 按空格拆分
 		parts := strings.SplitN(authHeader, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
 			ctx.JSON(http.StatusOK, gin.H{
@@ -39,7 +40,7 @@ func (m *JWTAuthMiddleware) Handler() gin.HandlerFunc {
 			return
 		}
 
-		//解析token包含的信息
+		// 解析token包含的信息
 		claims, err := m.authService.ParseToken(parts[1])
 		if err != nil {
 			ctx.JSON(http.StatusOK, gin.H{

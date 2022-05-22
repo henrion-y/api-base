@@ -2,9 +2,10 @@ package errors
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"net/http"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 // 错误码

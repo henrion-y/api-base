@@ -3,15 +3,16 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/henrion-y/api-base/http/errors"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/henrion-y/api-base/http/errors"
 )
 
 func ResponseError(c *gin.Context, err error) {
 	if xerr, ok := err.(*errors.XError); ok {
-		fmt.Errorf("%+v", xerr)
+		// fmt.Errorf("%+v", xerr)
 		c.AbortWithStatusJSON(xerr.Status, xerr)
 	} else {
 		ResponseError(c, errors.New(errors.ErrRuntime))

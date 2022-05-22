@@ -1,9 +1,10 @@
 package redis
 
 import (
+	"testing"
+
 	"github.com/henrion-y/api-base/cache"
 	"github.com/spf13/viper"
-	"testing"
 )
 
 func getCache() cache.Cache {
@@ -22,7 +23,6 @@ func TestCache_Set(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 }
 
 func TestCache_Get(t *testing.T) {

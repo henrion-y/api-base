@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"github.com/henrion-y/api-base/domain/model"
 )
 

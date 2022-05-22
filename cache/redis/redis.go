@@ -2,9 +2,10 @@ package redis
 
 import (
 	"encoding/json"
+	"reflect"
+
 	"github.com/garyburd/redigo/redis"
 	"github.com/henrion-y/api-base/cache"
-	"reflect"
 )
 
 type Cache struct {
@@ -12,7 +13,6 @@ type Cache struct {
 }
 
 func (m *Cache) Get(key string, resultPtr interface{}) error {
-
 	c := m.r.Get()
 	defer c.Close()
 
@@ -26,7 +26,6 @@ func (m *Cache) Get(key string, resultPtr interface{}) error {
 }
 
 func (m *Cache) BatchGet(keys []string, resultsPtr interface{}) error {
-
 	realKeys := make([]interface{}, len(keys))
 	for i, key := range keys {
 		realKeys[i] = key
@@ -64,7 +63,6 @@ func (m *Cache) BatchGet(keys []string, resultsPtr interface{}) error {
 }
 
 func (m *Cache) Set(key string, value interface{}, expireTs uint) error {
-
 	c := m.r.Get()
 	defer c.Close()
 
@@ -79,11 +77,9 @@ func (m *Cache) Set(key string, value interface{}, expireTs uint) error {
 		_, err = c.Do("SET", key, data)
 	}
 	return err
-
 }
 
 func (m *Cache) SetNX(key string, value interface{}, expiryTs uint) error {
-
 	c := m.r.Get()
 	defer c.Close()
 
@@ -97,7 +93,6 @@ func (m *Cache) SetNX(key string, value interface{}, expiryTs uint) error {
 }
 
 func (m *Cache) Delete(key string) error {
-
 	c := m.r.Get()
 	defer c.Close()
 
@@ -106,7 +101,6 @@ func (m *Cache) Delete(key string) error {
 }
 
 func (m *Cache) BatchDelete(keys []string) error {
-
 	realKeys := make([]interface{}, len(keys))
 	for i, key := range keys {
 		realKeys[i] = key

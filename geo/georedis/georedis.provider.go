@@ -1,4 +1,4 @@
-package redis
+package georedis
 
 import (
 	"errors"
@@ -6,11 +6,11 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/henrion-y/api-base/cache"
+	"github.com/henrion-y/api-base/geo"
 	"github.com/spf13/viper"
 )
 
-func NewRedisProvider(config *viper.Viper) (cache.Cache, error) {
+func NewRedisProvider(config *viper.Viper) (geo.Geo, error) {
 	host := config.GetString("redis.Host")
 	password := config.GetString("redis.Password")
 	maxIdle := config.GetInt("redis.MaxIdle")
@@ -44,5 +44,5 @@ func NewRedisProvider(config *viper.Viper) (cache.Cache, error) {
 		},
 	}
 
-	return &Cache{r: redisConn}, nil
+	return &Geo{pool: redisConn}, nil
 }

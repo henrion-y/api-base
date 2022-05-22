@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"errors"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,7 +12,6 @@ import (
 )
 
 func NewDbProvider(config *viper.Viper) (*mongo.Database, error) {
-
 	host := config.GetStringSlice("mongo.Hosts")
 	if len(host) == 0 {
 		return nil, errors.New("hosts is empty")
