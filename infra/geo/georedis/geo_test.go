@@ -3,11 +3,12 @@ package georedis
 import (
 	"testing"
 
-	"github.com/henrion-y/api-base/geo"
+	geo2 "github.com/henrion-y/api-base/infra/geo"
+
 	"github.com/spf13/viper"
 )
 
-func getCache() geo.Geo {
+func getCache() geo2.Geo {
 	conf := viper.New()
 
 	cacheRdb, err := NewRedisProvider(conf)
@@ -19,31 +20,31 @@ func getCache() geo.Geo {
 
 func TestGeo_Add(t *testing.T) {
 	rdb := getCache()
-	data := []*geo.Member{
+	data := []*geo2.Member{
 		{
 			Name: "shenzhen",
-			Coordinate: geo.Coordinate{
+			Coordinate: geo2.Coordinate{
 				Lat: 113.88308,
 				Lon: 22.55329,
 			},
 		},
 		{
 			Name: "dongguan",
-			Coordinate: geo.Coordinate{
+			Coordinate: geo2.Coordinate{
 				Lat: 113.75,
 				Lon: 23.05,
 			},
 		},
 		{
 			Name: "changsha",
-			Coordinate: geo.Coordinate{
+			Coordinate: geo2.Coordinate{
 				Lat: 112.98626,
 				Lon: 28.25591,
 			},
 		},
 		{
 			Name: "fuyang",
-			Coordinate: geo.Coordinate{
+			Coordinate: geo2.Coordinate{
 				Lat: 115.80,
 				Lon: 32.91,
 			},
@@ -70,13 +71,13 @@ func TestGeo_Pos(t *testing.T) {
 func TestGeo_Dist(t *testing.T) {
 	rdb := getCache()
 
-	dist, err := rdb.Dist("geo:city", "shenzhen", "dongguan", geo.KM)
+	dist, err := rdb.Dist("geo:city", "shenzhen", "dongguan", geo2.KM)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log(dist)
 
-	dist, err = rdb.Dist("geo:city", "shenzhen", "123", geo.KM)
+	dist, err = rdb.Dist("geo:city", "shenzhen", "123", geo2.KM)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,7 +87,7 @@ func TestGeo_Dist(t *testing.T) {
 func TestGeo_RadiusByName(t *testing.T) {
 	rdb := getCache()
 
-	members, err := rdb.RadiusByName("geo:city", "shenzhen", 6000, geo.KM, geo.WithDist)
+	members, err := rdb.RadiusByName("geo:city", "shenzhen", 6000, geo2.KM, geo2.WithDist)
 	if err != nil {
 		t.Fatal(err)
 	}

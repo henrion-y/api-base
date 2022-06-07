@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/henrion-y/api-base/geo"
+	geo2 "github.com/henrion-y/api-base/infra/geo"
 )
 
 func unpackValue(v reflect.Value) reflect.Value {
@@ -40,17 +40,17 @@ func toFloat64(v reflect.Value) (float64, error) {
 	return f, nil
 }
 
-func rawToNeighbors(r interface{}, options ...geo.Option) ([]*geo.Neighbor, error) {
+func rawToNeighbors(r interface{}, options ...geo2.Option) ([]*geo2.Neighbor, error) {
 	v := reflect.ValueOf(r)
 
 	if v.Kind() != reflect.Slice {
 		return nil, fmt.Errorf("wrong type: %v", v.Kind())
 	}
 
-	results := make([]*geo.Neighbor, v.Len())
+	results := make([]*geo2.Neighbor, v.Len())
 	var err error
 	for i := 0; i < v.Len(); i++ {
-		results[i], err = geo.NewNeighbor(unpackValue(v.Index(i)), options...)
+		results[i], err = geo2.NewNeighbor(unpackValue(v.Index(i)), options...)
 		if err != nil {
 			return nil, err
 		}

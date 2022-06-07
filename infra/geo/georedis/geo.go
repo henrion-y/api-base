@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/henrion-y/api-base/geo"
+	geo2 "github.com/henrion-y/api-base/infra/geo"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -15,7 +15,7 @@ type Geo struct {
 }
 
 // Add adds key and related meta data to redis
-func (s *Geo) Add(key string, data []*geo.Member) error {
+func (s *Geo) Add(key string, data []*geo2.Member) error {
 	conn := s.pool.Get()
 	defer conn.Close()
 
@@ -32,7 +32,7 @@ func (s *Geo) Add(key string, data []*geo.Member) error {
 // Pos gets the meta data by key
 // returned meta data hase the same order of names
 // leave nil for the keys have no data
-func (s *Geo) Pos(key string, names ...string) ([]*geo.Member, error) {
+func (s *Geo) Pos(key string, names ...string) ([]*geo2.Member, error) {
 	conn := s.pool.Get()
 	defer conn.Close()
 
@@ -47,11 +47,11 @@ func (s *Geo) Pos(key string, names ...string) ([]*geo.Member, error) {
 	}
 
 	// create meta data
-	data := make([]*geo.Member, len(r))
+	data := make([]*geo2.Member, len(r))
 	for i := range r {
 		if r[i] == nil {
 		} else {
-			data[i] = geo.NewMember(names[i], r[i][geo.LatIdx], r[i][geo.LonIdx])
+			data[i] = geo2.NewMember(names[i], r[i][geo2.LatIdx], r[i][geo2.LonIdx])
 		}
 	}
 
@@ -60,7 +60,7 @@ func (s *Geo) Pos(key string, names ...string) ([]*geo.Member, error) {
 
 // RadiusByName find nearby members of member
 // the result include the name itself
-func (s *Geo) RadiusByName(key string, name string, radius int, unit string, options ...geo.Option) ([]*geo.Neighbor, error) {
+func (s *Geo) RadiusByName(key string, name string, radius int, unit string, options ...geo2.Option) ([]*geo2.Neighbor, error) {
 	mems, err := s.Pos(key, name)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (s *Geo) RadiusByName(key string, name string, radius int, unit string, opt
 }
 
 // Radius find the neighbor with coordinate
-func (s *Geo) Radius(key string, coord geo.Coordinate, radius int, unit string, options ...geo.Option) ([]*geo.Neighbor, error) {
+func (s *Geo) Radius(key string, coord geo2.Coordinate, radius int, unit string, options ...geo2.Option) ([]*geo2.Neighbor, error) {
 	conn := s.pool.Get()
 	defer conn.Close()
 
@@ -82,7 +82,7 @@ func (s *Geo) Radius(key string, coord geo.Coordinate, radius int, unit string, 
 
 	// set options
 	for _, opt := range options {
-		args = append(args, geo.OptMap[opt])
+		args = append(args, geo2.OptMap[opt])
 	}
 
 	// execute command
@@ -104,7 +104,7 @@ func (s *Geo) Dist(key, member1, member2 string, unit string) (float64, error) {
 		return 0, err
 	}
 	if r == nil {
-		return 0, geo.ErrNil
+		return 0, geo2.ErrNil
 	}
 
 	v := reflect.ValueOf(r)

@@ -4,15 +4,16 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/henrion-y/api-base/infra/jwt"
+
 	"github.com/gin-gonic/gin"
-	"github.com/henrion-y/api-base/utils"
 )
 
 type JWTAuthMiddleware struct {
-	authService utils.AuthService
+	authService jwt.AuthService
 }
 
-func NewJWTAuthMiddleware(authService utils.AuthService) (*JWTAuthMiddleware, error) {
+func NewJWTAuthMiddleware(authService jwt.AuthService) (*JWTAuthMiddleware, error) {
 	return &JWTAuthMiddleware{authService: authService}, nil
 }
 
