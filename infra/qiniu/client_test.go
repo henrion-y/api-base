@@ -8,6 +8,7 @@ import (
 
 func getClient(t *testing.T) *Client {
 	conf := viper.New()
+
 	client, err := NewQiNiuClient(conf)
 	if err != nil {
 		t.Fatal(err)

@@ -3,6 +3,7 @@ package qiniu
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -16,7 +17,7 @@ type Client struct {
 	secretKey        string
 	upToken          string // 缓存的token
 	putPolicyExpires uint64 // token有效时间秒
-	upTokenExpiresAt int    // token过期时间（秒）
+	upTokenExpiresAt int64  // token过期时间（秒）
 	bucket           string
 	cfg              storage.Config
 }
@@ -58,19 +59,20 @@ func NewQiNiuClient(config *viper.Viper) (*Client, error) {
 	return client, nil
 }
 
-func (c *Client) GetUpToken() (string, int, error) {
+func (c *Client) GetUpToken() (string, int64, error) {
 	putPolicy := storage.PutPolicy{
 		Scope: c.bucket,
 	}
 	putPolicy.Expires = c.putPolicyExpires
 	mac := qbox.NewMac(c.accessKey, c.secretKey)
 	c.upToken = putPolicy.UploadToken(mac)
-	c.upTokenExpiresAt = time.Now().Second() + int(c.putPolicyExpires)
+	c.upTokenExpiresAt = time.Now().Unix() + int64(c.putPolicyExpires)
+	fmt.Println(c.cfg.Zone.SrcUpHosts)
 	return c.upToken, c.upTokenExpiresAt, nil
 }
 
 func (c *Client) UploadLocalFile(localFile string, remoteFile string) (*storage.PutRet, error) {
-	if time.Now().Second() > c.upTokenExpiresAt {
+	if time.Now().Unix() > c.upTokenExpiresAt {
 		_, _, err := c.GetUpToken()
 		if err != nil {
 			return nil, err
@@ -87,7 +89,7 @@ func (c *Client) UploadLocalFile(localFile string, remoteFile string) (*storage.
 }
 
 func (c *Client) ResumeUploaderFile(localFile string, remoteFile string) (*storage.PutRet, error) {
-	if time.Now().Second() > c.upTokenExpiresAt {
+	if time.Now().Unix() > c.upTokenExpiresAt {
 		_, _, err := c.GetUpToken()
 		if err != nil {
 			return nil, err
