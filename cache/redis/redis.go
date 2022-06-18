@@ -113,6 +113,14 @@ func (m *Cache) BatchDelete(keys []string) error {
 	return err
 }
 
+func (m *Cache) Incr(key string) error {
+	c := m.r.Get()
+	defer c.Close()
+
+	_, err := c.Do("DEL", key)
+	return err
+}
+
 func (m *Cache) Close() error {
 	return m.r.Close()
 }

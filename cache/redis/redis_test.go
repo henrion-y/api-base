@@ -3,14 +3,16 @@ package redis
 import (
 	"testing"
 
+	"github.com/henrion-y/api-base/infra/redisapi"
+
 	"github.com/henrion-y/api-base/cache"
 	"github.com/spf13/viper"
 )
 
 func getCache() cache.Cache {
 	conf := viper.New()
-
-	cacheRdb, err := NewRedisProvider(conf)
+	redisApi, _ := redisapi.NewRedisApiProvider(conf)
+	cacheRdb, err := NewRedisProvider(redisApi)
 	if err != nil {
 		panic(err)
 	}
