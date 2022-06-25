@@ -81,8 +81,7 @@ func NewRedisApiProvider(config *viper.Viper) (*RedisApi, error) {
 	}, nil
 }
 
-func (api *RedisApi) Get(key string) (value string, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) Get(key string) (value []byte, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -90,7 +89,7 @@ func (api *RedisApi) Get(key string) (value string, err error) {
 			log.Println(err)
 		}
 	}(redisConn)
-	value, err = redis.String(redisConn.Do("GET", key))
+	value, err = redis.Bytes(redisConn.Do("GET", key))
 
 	return value, err
 }
@@ -123,8 +122,7 @@ func (api *RedisApi) GetSet(key, content string, expire int) (value string, err 
 	return value, err
 }
 
-func (api *RedisApi) Mget(field []string) (value []string, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) MGet(field []string) (value []string, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -144,7 +142,6 @@ func (api *RedisApi) Mget(field []string) (value []string, err error) {
 
 // MGetSlice 批量得到slice
 func (api *RedisApi) MGetSlice(field []string) (value [][]byte, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -179,7 +176,6 @@ func (api *RedisApi) MSet(keyVal []interface{}) (err error) {
 }
 
 func (api *RedisApi) GetInt64(key string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -207,7 +203,6 @@ func (api *RedisApi) GetSetInt64(key string, content int64, expire int) (value i
 }
 
 func (api *RedisApi) Incr(key string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -221,7 +216,6 @@ func (api *RedisApi) Incr(key string) (value int64, err error) {
 }
 
 func (api *RedisApi) IncrBy(key string, increment int64) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -235,7 +229,6 @@ func (api *RedisApi) IncrBy(key string, increment int64) (value int64, err error
 }
 
 func (api *RedisApi) Decr(key string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -249,7 +242,6 @@ func (api *RedisApi) Decr(key string) (value int64, err error) {
 }
 
 func (api *RedisApi) DecrBy(key string, increment int64) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -263,7 +255,6 @@ func (api *RedisApi) DecrBy(key string, increment int64) (value int64, err error
 }
 
 func (api *RedisApi) SetNxEx(key, value string, expireTs int64) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -287,7 +278,6 @@ func (api *RedisApi) SetNxEx(key, value string, expireTs int64) (err error) {
 }
 
 func (api *RedisApi) Setex(key, value string, expireTs uint32) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -326,7 +316,6 @@ func (api *RedisApi) SetNMxInt64(key string, value int64) (err error) {
 }
 
 func (api *RedisApi) Set(key, value interface{}) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -350,7 +339,6 @@ func (api *RedisApi) Set(key, value interface{}) (err error) {
 }
 
 func (api *RedisApi) SetBit(key string, offset, value int) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -364,7 +352,6 @@ func (api *RedisApi) SetBit(key string, offset, value int) (err error) {
 }
 
 func (api *RedisApi) Del(key string) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -383,7 +370,6 @@ func (api *RedisApi) Del(key string) (err error) {
 }
 
 func (api *RedisApi) BatchDel(keys []string) (count int, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -404,7 +390,6 @@ func (api *RedisApi) BatchDel(keys []string) (count int, err error) {
 }
 
 func (api *RedisApi) Exists(key string) (result bool, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -428,7 +413,6 @@ func (api *RedisApi) Exists(key string) (result bool, err error) {
 
 // TTL 检查key的过期时间
 func (api *RedisApi) TTL(key string) (result int, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -443,7 +427,6 @@ func (api *RedisApi) TTL(key string) (result int, err error) {
 
 // Expire 设置Key的生存时间
 func (api *RedisApi) Expire(key string, seconds uint64) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -473,7 +456,6 @@ func (api *RedisApi) Expire(key string, seconds uint64) (err error) {
 
 // Expireat 设置Key的生存时间 使用UnixTimeStamp 设置
 func (api *RedisApi) Expireat(key string, timeStamp int64) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -502,7 +484,6 @@ func (api *RedisApi) Expireat(key string, timeStamp int64) (err error) {
 }
 
 func (api *RedisApi) Keys(pattern string) (value []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -515,8 +496,7 @@ func (api *RedisApi) Keys(pattern string) (value []string, err error) {
 	return value, err
 }
 
-func (api *RedisApi) Hget(key, field string) (value string, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) HGet(key, field string) (value string, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -529,8 +509,7 @@ func (api *RedisApi) Hget(key, field string) (value string, err error) {
 	return value, err
 }
 
-func (api *RedisApi) HgetBytes(key, field string) (value []byte, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) HGetBytes(key, field string) (value []byte, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -543,8 +522,7 @@ func (api *RedisApi) HgetBytes(key, field string) (value []byte, err error) {
 	return value, err
 }
 
-func (api *RedisApi) HgetInt64(key, field string) (value int64, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) HGetInt64(key, field string) (value int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -557,8 +535,7 @@ func (api *RedisApi) HgetInt64(key, field string) (value int64, err error) {
 	return value, err
 }
 
-func (api *RedisApi) Hset(key, field, value string) (err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) HSet(key, field, value string) (err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -576,8 +553,7 @@ func (api *RedisApi) Hset(key, field, value string) (err error) {
 	return err
 }
 
-func (api *RedisApi) HsetInt64(key, field string, value int64) (err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) HSetInt64(key, field string, value int64) (err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -595,7 +571,7 @@ func (api *RedisApi) HsetInt64(key, field string, value int64) (err error) {
 	return err
 }
 
-func (api *RedisApi) HclearSSDB(key string) error {
+func (api *RedisApi) HClearSSDB(key string) error {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -608,8 +584,7 @@ func (api *RedisApi) HclearSSDB(key string) error {
 	return err
 }
 
-func (api *RedisApi) Hdel(key, field string) (result bool, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) HDel(key, field string) (result bool, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -629,7 +604,6 @@ func (api *RedisApi) Hdel(key, field string) (result bool, err error) {
 }
 
 func (api *RedisApi) HBatchDel(key string, field []string) (delCount int, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -648,7 +622,6 @@ func (api *RedisApi) HBatchDel(key string, field []string) (delCount int, err er
 }
 
 func (api *RedisApi) HMGet(key string, field []string) (value []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -668,7 +641,6 @@ func (api *RedisApi) HMGet(key string, field []string) (value []string, err erro
 
 // HMGetBytes 得到bytes的数组
 func (api *RedisApi) HMGetBytes(key string, field []string) (value [][]byte, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -729,7 +701,6 @@ func (api *RedisApi) HMGetFloat64(key string, field []string) (value []float64, 
 }
 
 func (api *RedisApi) Hlen(key string) (count int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -744,7 +715,6 @@ func (api *RedisApi) Hlen(key string) (count int64, err error) {
 
 // HmSet 使用key-value 键值对组成的slice
 func (api *RedisApi) HmSet(key string, keyValue []string) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -767,7 +737,6 @@ func (api *RedisApi) HmSet(key string, keyValue []string) (err error) {
 }
 
 func (api *RedisApi) HGetAll(key string) (keyValue map[string]string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -781,7 +750,6 @@ func (api *RedisApi) HGetAll(key string) (keyValue map[string]string, err error)
 }
 
 func (api *RedisApi) HIncrBy(key, field string, increment int) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -796,7 +764,6 @@ func (api *RedisApi) HIncrBy(key, field string, increment int) (value int64, err
 
 // HScan 当hash map 较小时返回整个hashmap,当hashmap 较大时，返回前面的10条
 func (api *RedisApi) HScan(key string, cursor int64) (items []string, outCursor int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -848,7 +815,6 @@ func (api *RedisApi) HrScanSSDB(key, start, end string, limit int64) (items []st
 }
 
 func (api *RedisApi) HExists(key, field string) (ret int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -863,7 +829,6 @@ func (api *RedisApi) HExists(key, field string) (ret int64, err error) {
 
 // 兼容SSDB的keys遍历
 func (api *RedisApi) HScanWithRange(key string, startSubKey, endSubKey string, maxCounts int64) (value [][]byte, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -878,7 +843,6 @@ func (api *RedisApi) HScanWithRange(key string, startSubKey, endSubKey string, m
 
 // HKeys
 func (api *RedisApi) HKeys(key string) (value []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -911,7 +875,6 @@ func (api *RedisApi) HKeysSSDB(key, start, end string, limit int64) ([]string, e
 
 // HKeysRange 兼容SSDB的keys遍历
 func (api *RedisApi) HKeysRange(key string, startSubKey, endSubKey string, maxCounts int64) (value map[string]string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -926,7 +889,6 @@ func (api *RedisApi) HKeysRange(key string, startSubKey, endSubKey string, maxCo
 
 // ZAdd 返回 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 func (api *RedisApi) ZAdd(key string, score int64, member string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -939,9 +901,8 @@ func (api *RedisApi) ZAdd(key string, score int64, member string) (value int64, 
 	return value, err
 }
 
-// new added: 20200808 reason: the score should allow float64 value
+// ZAddFloat64  reason: the score should allow float64 value
 func (api *RedisApi) ZAddFloat64(key string, score float64, member string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -955,7 +916,6 @@ func (api *RedisApi) ZAddFloat64(key string, score float64, member string) (valu
 }
 
 func (api *RedisApi) ZAddSlice(key string, keyScore []uint32) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -979,7 +939,6 @@ func (api *RedisApi) ZAddSlice(key string, keyScore []uint32) (value int64, err 
 
 // ZAddStringSlice Deprecated 这个方法设计得有点反 redis, 是按 member, score 反过来的
 func (api *RedisApi) ZAddStringSlice(key string, keyScore []string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1003,7 +962,6 @@ func (api *RedisApi) ZAddStringSlice(key string, keyScore []string) (value int64
 
 // ZAddBatch key score member [score member ...]
 func (api *RedisApi) ZAddBatch(key string, scoreMemberPairs []string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1026,7 +984,6 @@ func (api *RedisApi) ZAddBatch(key string, scoreMemberPairs []string) (value int
 }
 
 func (api *RedisApi) ZAddInterfaceSlice(key string, keyScore []interface{}) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1048,9 +1005,8 @@ func (api *RedisApi) ZAddInterfaceSlice(key string, keyScore []interface{}) (val
 	return value, err
 }
 
-// 返回 被成功移除的成员的数量，不包括被忽略的成员。
+// ZRem 返回 被成功移除的成员的数量，不包括被忽略的成员。
 func (api *RedisApi) ZRem(key, member string) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1063,11 +1019,10 @@ func (api *RedisApi) ZRem(key, member string) (value int64, err error) {
 	return value, err
 }
 
-// Removes the specified members from the sorted set stored at key. Non existing members are ignored.
+// ZRemBatch Removes the specified members from the sorted set stored at key. Non existing members are ignored.
 // https://redis.io/commands/zrem
 // An error is returned when key exists and does not hold a sorted set.
 func (api *RedisApi) ZRemBatch(key string, member []string) (delCount int, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1085,9 +1040,8 @@ func (api *RedisApi) ZRemBatch(key string, member []string) (delCount int, err e
 	return delCount, err
 }
 
-// 返回 指定区间内，带有 score 值(可选)的有序集成员的列表
+// ZRange 返回 指定区间内，带有 score 值(可选)的有序集成员的列表
 func (api *RedisApi) ZRange(key string, start, stop int64) (valSlice []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1101,7 +1055,6 @@ func (api *RedisApi) ZRange(key string, start, stop int64) (valSlice []string, e
 }
 
 func (api *RedisApi) ZRangeWithOutScore(key string, start, stop int64) (keys []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1114,8 +1067,7 @@ func (api *RedisApi) ZRangeWithOutScore(key string, start, stop int64) (keys []s
 	return keys, err
 }
 
-func (api *RedisApi) ZRevrange(key string, start, stop int64) (valSlice []string, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) ZRevRange(key string, start, stop int64) (valSlice []string, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1128,8 +1080,7 @@ func (api *RedisApi) ZRevrange(key string, start, stop int64) (valSlice []string
 	return valSlice, err
 }
 
-func (api *RedisApi) ZRevrangeWithOutScore(key string, start, stop int64) (keys []string, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) ZRevRangeWithOutScore(key string, start, stop int64) (keys []string, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1142,9 +1093,8 @@ func (api *RedisApi) ZRevrangeWithOutScore(key string, start, stop int64) (keys 
 	return keys, err
 }
 
-// 返回 member 成员的 score 值，以字符串形式表示
-func (api *RedisApi) Zscore(key, member string) (value uint64, err error) {
-	// 获取一条Redis连接
+// ZScore 返回 member 成员的 score 值，以字符串形式表示
+func (api *RedisApi) ZScore(key, member string) (value uint64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1157,9 +1107,8 @@ func (api *RedisApi) Zscore(key, member string) (value uint64, err error) {
 	return value, err
 }
 
-// 将有序集合src复制到des
-func (api *RedisApi) ZunionStore(des, src string) (value uint64, err error) {
-	// 获取一条Redis连接
+// ZUnionStore 将有序集合src复制到des
+func (api *RedisApi) ZUnionStore(des, src string) (value uint64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1179,8 +1128,7 @@ func (api *RedisApi) ZunionStore(des, src string) (value uint64, err error) {
 	return value, err
 }
 
-func (api *RedisApi) Lpush(key, value string) (listSize int64, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) LPush(key, value string) (listSize int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1193,8 +1141,7 @@ func (api *RedisApi) Lpush(key, value string) (listSize int64, err error) {
 	return listSize, err
 }
 
-func (api *RedisApi) Rpush(key, value string) (listSize int64, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) RPush(key, value string) (listSize int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1207,7 +1154,7 @@ func (api *RedisApi) Rpush(key, value string) (listSize int64, err error) {
 	return listSize, err
 }
 
-func (api *RedisApi) Sadd(key, value string) (ret int64, err error) {
+func (api *RedisApi) SAdd(key, value string) (ret int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1220,7 +1167,7 @@ func (api *RedisApi) Sadd(key, value string) (ret int64, err error) {
 	return ret, err
 }
 
-func (api *RedisApi) Srem(key, value string) (ret int64, err error) {
+func (api *RedisApi) SRem(key, value string) (ret int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1233,7 +1180,7 @@ func (api *RedisApi) Srem(key, value string) (ret int64, err error) {
 	return ret, err
 }
 
-func (api *RedisApi) Sismember(key, value string) (ret int64, err error) {
+func (api *RedisApi) SisMember(key, value string) (ret int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1247,8 +1194,7 @@ func (api *RedisApi) Sismember(key, value string) (ret int64, err error) {
 }
 
 ///blpop 操作
-func (api *RedisApi) BLpop(key string, timeout uint8) (string, error) {
-	// 获取一条Redis连接
+func (api *RedisApi) BLPop(key string, timeout uint8) (string, error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1276,7 +1222,7 @@ func (api *RedisApi) StartLoop(
 	for i := uint32(0); i < maxGoroutineLimit; i++ {
 		go func() {
 			for {
-				info, rerr := api.BLpop(key, timeout)
+				info, rerr := api.BLPop(key, timeout)
 				if rerr != nil {
 					continue
 				}
@@ -1304,7 +1250,7 @@ func (api *RedisApi) SPop(key string, params ...interface{}) (ret []string, err 
 	return ret, err
 }
 
-// 发布
+// Publish 发布
 func (api *RedisApi) Publish(key, value string) (ret int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
@@ -1319,7 +1265,6 @@ func (api *RedisApi) Publish(key, value string) (ret int64, err error) {
 }
 
 func (api *RedisApi) Sets(key, value interface{}) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1336,8 +1281,7 @@ func (api *RedisApi) Sets(key, value interface{}) (err error) {
 	return err
 }
 
-func (api *RedisApi) Setexs(key, value interface{}, expireTs uint32) (err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) SetExs(key, value interface{}, expireTs uint32) (err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1355,7 +1299,6 @@ func (api *RedisApi) Setexs(key, value interface{}, expireTs uint32) (err error)
 }
 
 func (api *RedisApi) ClusterNodes() (nodes []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1414,7 +1357,7 @@ func (api *RedisApi) Scan(cursor uint64, match string, count int64) (keys []stri
 	}
 	r1, ok := r.([]interface{})
 	if !ok {
-		err = fmt.Errorf("Scans assertion fail r=%#v", r)
+		err = fmt.Errorf("scans assertion fail r=%#v", r)
 		return
 	}
 	keys, e = redis.Strings(r1[1], e)
@@ -1426,9 +1369,8 @@ func (api *RedisApi) Scan(cursor uint64, match string, count int64) (keys []stri
 	return
 }
 
-// 获取有序集合的个数
+// Zlexcount 获取有序集合的个数
 func (api *RedisApi) Zlexcount(key string, params []interface{}) (value uint64, err error) {
-	// 获取一条Redis连接
 	args := make([]interface{}, len(params)+1)
 	args[0] = key
 	copy(args[1:], params)
@@ -1445,7 +1387,6 @@ func (api *RedisApi) Zlexcount(key string, params []interface{}) (value uint64, 
 }
 
 func (api *RedisApi) GetSlice(key string) (value []byte, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1459,7 +1400,6 @@ func (api *RedisApi) GetSlice(key string) (value []byte, err error) {
 }
 
 func (api *RedisApi) HmSets(key string, params []interface{}) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1479,7 +1419,7 @@ func (api *RedisApi) HmSets(key string, params []interface{}) (err error) {
 	return err
 }
 
-func (api *RedisApi) BFreserve(key string, errorRate float64, size uint64) (ret string, err error) {
+func (api *RedisApi) BFreServe(key string, errorRate float64, size uint64) (ret string, err error) {
 	args := []interface{}{key, errorRate, size}
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
@@ -1493,7 +1433,7 @@ func (api *RedisApi) BFreserve(key string, errorRate float64, size uint64) (ret 
 	return ret, err
 }
 
-func (api *RedisApi) BFadd(key string, value interface{}) (ret uint64, err error) {
+func (api *RedisApi) BFAdd(key string, value interface{}) (ret uint64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1506,7 +1446,7 @@ func (api *RedisApi) BFadd(key string, value interface{}) (ret uint64, err error
 	return ret, err
 }
 
-func (api *RedisApi) BFexists(key string, value interface{}) (ret uint64, err error) {
+func (api *RedisApi) BFExists(key string, value interface{}) (ret uint64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1519,7 +1459,7 @@ func (api *RedisApi) BFexists(key string, value interface{}) (ret uint64, err er
 	return ret, err
 }
 
-func (api *RedisApi) BFmadd(key string, params []interface{}) (ret []int64, err error) {
+func (api *RedisApi) BFMAdd(key string, params []interface{}) (ret []int64, err error) {
 	args := make([]interface{}, len(params)+1)
 	args[0] = key
 	copy(args[1:], params)
@@ -1535,7 +1475,7 @@ func (api *RedisApi) BFmadd(key string, params []interface{}) (ret []int64, err 
 	return
 }
 
-func (api *RedisApi) BFmexists(key string, params []interface{}) (ret []int64, err error) {
+func (api *RedisApi) BFMExists(key string, params []interface{}) (ret []int64, err error) {
 	args := make([]interface{}, len(params)+1)
 	args[0] = key
 	copy(args[1:], params)
@@ -1583,7 +1523,7 @@ func (api *RedisApi) BFInsert(key string, errRate float64, size int64, values []
 	return ret, err
 }
 
-func (api *RedisApi) Sadds(key string, params []interface{}) (value uint64, err error) {
+func (api *RedisApi) SAdds(key string, params []interface{}) (value uint64, err error) {
 	args := make([]interface{}, len(params)+1)
 	args[0] = key
 	copy(args[1:], params)
@@ -1599,7 +1539,7 @@ func (api *RedisApi) Sadds(key string, params []interface{}) (value uint64, err 
 	return
 }
 
-func (api *RedisApi) Smembers(key string) (value []string, err error) {
+func (api *RedisApi) SMembers(key string) (value []string, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1655,7 +1595,6 @@ func (api *RedisApi) SCard(key string) (value int64, err error) {
 // Specified members that are not a member of this set are ignored.
 // If key does not exist, it is treated as an empty set and this command returns 0.
 // An error is returned when the value stored at key is not a set.
-// SREM key member [member ...]
 func (api *RedisApi) SRemBatch(key string, members []string) (removedNum uint64, err error) {
 	args := make([]interface{}, 0, len(members)+1)
 	args = append(args, key)
@@ -1675,7 +1614,6 @@ func (api *RedisApi) SRemBatch(key string, members []string) (removedNum uint64,
 }
 
 func (api *RedisApi) ZAddIntSlice(key string, keyScore []int) (value int64, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1697,8 +1635,7 @@ func (api *RedisApi) ZAddIntSlice(key string, keyScore []int) (value int64, err 
 	return value, err
 }
 
-func (api *RedisApi) ZRevrangeInt(key string, start, stop int64) (valSlice []int, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) ZRevRangeInt(key string, start, stop int64) (valSlice []int, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1711,8 +1648,7 @@ func (api *RedisApi) ZRevrangeInt(key string, start, stop int64) (valSlice []int
 	return valSlice, err
 }
 
-func (api *RedisApi) RpushSlice(key string, params []interface{}) (listSize int64, err error) {
-	// 获取一条Redis连接
+func (api *RedisApi) RPushSlice(key string, params []interface{}) (listSize int64, err error) {
 	args := make([]interface{}, len(params)+1)
 	args[0] = key
 	copy(args[1:], params)
@@ -1728,10 +1664,9 @@ func (api *RedisApi) RpushSlice(key string, params []interface{}) (listSize int6
 	return listSize, err
 }
 
-// Returns all the elements in the sorted set at key with a score between min and max (including elements with score equal to min or max).
+// ZRangeByScore Returns all the elements in the sorted set at key with a score between min and max (including elements with score equal to min or max).
 // The elements are considered to be ordered from low to high scores.
 func (api *RedisApi) ZRangeByScore(key string, min float64, max float64, offset, count int64) (valSlice []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1739,15 +1674,12 @@ func (api *RedisApi) ZRangeByScore(key string, min float64, max float64, offset,
 			log.Println(err)
 		}
 	}(redisConn)
-	// zrangebyscore key min max [WITHSCORES] [LIMIT offset count]
-	// member1, score1, member2, score2, member3, score3
 	valSlice, err = redis.Strings(redisConn.Do("ZRANGEBYSCORE", key, min, max, "WITHSCORES", "LIMIT", offset, count))
 
 	return valSlice, err
 }
 
 func (api *RedisApi) ZRangeByScoreInt64(key string, min int64, max int64, offset, count int64) (valSlice []string, err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1783,8 +1715,8 @@ func (api *RedisApi) Zcard(key string) (count int64, err error) {
 	return count, err
 }
 
-// Zclear delete all members in a zset
-func (api *RedisApi) Zclear(key string) (err error) {
+// ZClear delete all members in a zset
+func (api *RedisApi) ZClear(key string) (err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1812,8 +1744,8 @@ func (api *RedisApi) Zcount(key string, min float64, max float64) (count int64, 
 	return count, err
 }
 
-// Zcount returns the number of elements in the sorted set at key with a score between min and max.
-func (api *RedisApi) ZcountInt64(key string, min int64, max int64) (count int64, err error) {
+// ZCountInt64 returns the number of elements in the sorted set at key with a score between min and max.
+func (api *RedisApi) ZCountInt64(key string, min int64, max int64) (count int64, err error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1857,7 +1789,7 @@ func (api *RedisApi) ZRemRangeByScoreInt64(key string, min int64, max int64) (co
 	return count, err
 }
 
-// load the script
+// LoadScript load the script
 func (api *RedisApi) LoadScript(keyCount int, src string) (*redis.Script, error) {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
@@ -1889,7 +1821,7 @@ func (api *RedisApi) DoScript(scr *redis.Script, keysAndArgs ...interface{}) (in
 	return r, err
 }
 
-// evaluates the script without waiting for the reply
+// DoScriptNoWait evaluates the script without waiting for the reply
 func (api *RedisApi) DoScriptNoWait(scr *redis.Script, keysAndArgs ...interface{}) error {
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
@@ -1903,10 +1835,9 @@ func (api *RedisApi) DoScriptNoWait(scr *redis.Script, keysAndArgs ...interface{
 	return err
 }
 
-// Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to
+// Persist Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to
 // persistent (a key that will never expire as no timeout is associated).
 func (api *RedisApi) Persist(key string) (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1926,7 +1857,6 @@ func (api *RedisApi) Persist(key string) (err error) {
 }
 
 func (api *RedisApi) FlushDB() (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()
@@ -1940,7 +1870,6 @@ func (api *RedisApi) FlushDB() (err error) {
 }
 
 func (api *RedisApi) FlushAll() (err error) {
-	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
 		err := redisConn.Close()

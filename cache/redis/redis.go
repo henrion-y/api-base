@@ -16,13 +16,13 @@ func (m *Cache) Get(key string, resultPtr interface{}) error {
 	c := m.r.Get()
 	defer c.Close()
 
-	data, err := redis.String(c.Do("GET", key))
+	data, err := redis.Bytes(c.Do("GET", key))
 	if err == redis.ErrNil {
 		return cache.ErrNil
 	} else if err != nil {
 		return err
 	}
-	return json.Unmarshal([]byte(data), resultPtr)
+	return json.Unmarshal(data, resultPtr)
 }
 
 func (m *Cache) BatchGet(keys []string, resultsPtr interface{}) error {
@@ -72,7 +72,7 @@ func (m *Cache) Set(key string, value interface{}, expireTs uint) error {
 	}
 
 	if expireTs > 0 {
-		_, err = c.Do("SETEX", key, expireTs, value)
+		_, err = c.Do("SETEX", key, expireTs, data)
 	} else {
 		_, err = c.Do("SET", key, data)
 	}
