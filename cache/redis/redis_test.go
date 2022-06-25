@@ -22,7 +22,7 @@ func getCache() cache.Cache {
 
 func TestCache_Set(t *testing.T) {
 	rdb := getCache()
-	err := rdb.Set("", "", 0)
+	err := rdb.Set("12423543", "aesrfewaf", 0)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,8 +30,8 @@ func TestCache_Set(t *testing.T) {
 
 func TestCache_Get(t *testing.T) {
 	rdb := getCache()
-	data := 0
-	err := rdb.Get("", &data)
+	data := ""
+	err := rdb.Get("12423543", &data)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -6,7 +6,7 @@ import (
 
 	geo2 "github.com/henrion-y/api-base/infra/geo"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 // Geo is the core service for geolocation-related operation

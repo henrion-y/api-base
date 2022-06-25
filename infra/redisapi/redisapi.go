@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gomodule/redigo/redis"
 	"io"
 	"log"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
 	"github.com/spf13/viper"
 )
 

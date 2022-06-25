@@ -6,8 +6,8 @@ import (
 
 	"github.com/henrion-y/api-base/infra/geo"
 
-	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gomodule/redigo/redis"
 	"github.com/spf13/viper"
 )
 
