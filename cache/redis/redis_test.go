@@ -11,6 +11,7 @@ import (
 
 func getCache() cache.Cache {
 	conf := viper.New()
+
 	redisApi, _ := redisapi.NewRedisApiProvider(conf)
 	cacheRdb, err := NewRedisProvider(redisApi)
 	if err != nil {

@@ -16,13 +16,13 @@ func (m *Cache) Get(key string, resultPtr interface{}) error {
 	c := m.r.Get()
 	defer c.Close()
 
-	data, err := redis.Bytes(c.Do("GET", key))
+	data, err := redis.String(c.Do("GET", key))
 	if err == redis.ErrNil {
 		return cache.ErrNil
 	} else if err != nil {
 		return err
 	}
-	return json.Unmarshal(data, resultPtr)
+	return json.Unmarshal([]byte(data), resultPtr)
 }
 
 func (m *Cache) BatchGet(keys []string, resultsPtr interface{}) error {

@@ -81,7 +81,7 @@ func NewRedisApiProvider(config *viper.Viper) (*RedisApi, error) {
 	}, nil
 }
 
-func (api *RedisApi) Get(key string) (value []byte, err error) {
+func (api *RedisApi) Get(key string) (value string, err error) {
 	// 获取一条Redis连接
 	redisConn := api.RedisPool.Get()
 	defer func(redisConn redis.Conn) {
@@ -90,7 +90,7 @@ func (api *RedisApi) Get(key string) (value []byte, err error) {
 			log.Println(err)
 		}
 	}(redisConn)
-	value, err = redis.Bytes(redisConn.Do("GET", key))
+	value, err = redis.String(redisConn.Do("GET", key))
 
 	return value, err
 }
