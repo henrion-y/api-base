@@ -14,17 +14,17 @@ func newAcNode() *acNode {
 	}
 }
 
-type acAutoMachine struct {
+type AcAutoMachine struct {
 	root *acNode
 }
 
-func NewAcAutoMachine() *acAutoMachine {
-	return &acAutoMachine{
+func NewAcAutoMachine() *AcAutoMachine {
+	return &AcAutoMachine{
 		root: newAcNode(),
 	}
 }
 
-func (ac *acAutoMachine) AddPattern(pattern string) {
+func (ac *AcAutoMachine) AddPattern(pattern string) {
 	chars := []rune(pattern)
 	iter := ac.root
 	for _, c := range chars {
@@ -36,7 +36,7 @@ func (ac *acAutoMachine) AddPattern(pattern string) {
 	iter.isPattern = true
 }
 
-func (ac *acAutoMachine) Build() {
+func (ac *AcAutoMachine) Build() {
 	var queue []*acNode
 	queue = append(queue, ac.root)
 	for len(queue) != 0 {
@@ -64,7 +64,7 @@ func (ac *acAutoMachine) Build() {
 	}
 }
 
-func (ac *acAutoMachine) Query(content string) (results []string) {
+func (ac *AcAutoMachine) Query(content string) (results []string) {
 	chars := []rune(content)
 	iter := ac.root
 	var start, end int
