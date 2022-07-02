@@ -15,6 +15,7 @@ require (
 )
 
 require (
+	github.com/Baidu-AIP/golang-sdk v1.1.0 // indirect
 	github.com/fortytw2/leaktest v1.3.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
