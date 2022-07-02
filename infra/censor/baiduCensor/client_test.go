@@ -9,8 +9,8 @@ import (
 
 func getCensorClient() (censor.Client, error) {
 	conf := viper.New()
-	conf.Set("baiduCensor.AK", "QhTFrbE81nTZhwFNdnZYj1Iq")
-	conf.Set("baiduCensor.SK", "vFnBLmhApRDs5s9H6pgMeabccsi8nlMc")
+	conf.Set("baiduCensor.AK", "")
+	conf.Set("baiduCensor.SK", "")
 	return NewBaiduCensorClient(conf)
 }
 
