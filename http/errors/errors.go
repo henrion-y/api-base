@@ -11,23 +11,27 @@ import (
 // 错误码
 const (
 	// 通用错误
-	ErrRuntime         = 10000
-	ErrParamRequired   = 10001
-	ErrParamInvalid    = 10002
-	ErrInvoke          = 10003
-	ErrSession         = 10004
-	ErrUnauthenticated = 10005
-	ErrUnauthorized    = 10006
+	ErrCustom           = 10000 // 自定义错误，透传给前端直接显示， 比如验证码未过期，剩余时间xx秒等
+	ErrRuntime          = 10001
+	ErrParamRequired    = 10002
+	ErrParamInvalid     = 10003
+	ErrInvoke           = 10004
+	ErrSession          = 10005
+	ErrUnauthenticated  = 10006
+	ErrUnauthorized     = 10007
+	ErrContentSensitive = 10008
 )
 
 var errorMap = map[int]errorDefinition{
-	ErrRuntime:         {code: ErrRuntime, message: "运行错误", status: http.StatusInternalServerError},
-	ErrParamRequired:   {code: ErrParamRequired, message: "缺少参数", status: http.StatusBadRequest},
-	ErrParamInvalid:    {code: ErrParamInvalid, message: "参数格式错误", status: http.StatusBadRequest},
-	ErrInvoke:          {code: ErrInvoke, message: "调用服务失败", status: http.StatusInternalServerError},
-	ErrSession:         {code: ErrSession, message: "用户会话错误", status: http.StatusInternalServerError},
-	ErrUnauthenticated: {code: ErrUnauthenticated, message: "用户未认证", status: http.StatusForbidden},
-	ErrUnauthorized:    {code: ErrUnauthorized, message: "用户未授权", status: http.StatusUnauthorized},
+	ErrCustom:           {code: ErrCustom, message: "自定义错误", status: http.StatusOK},
+	ErrRuntime:          {code: ErrRuntime, message: "运行错误", status: http.StatusInternalServerError},
+	ErrParamRequired:    {code: ErrParamRequired, message: "缺少参数", status: http.StatusBadRequest},
+	ErrParamInvalid:     {code: ErrParamInvalid, message: "参数格式错误", status: http.StatusBadRequest},
+	ErrContentSensitive: {code: ErrContentSensitive, message: "内容包含敏感词", status: http.StatusBadRequest},
+	ErrInvoke:           {code: ErrInvoke, message: "调用服务失败", status: http.StatusInternalServerError},
+	ErrSession:          {code: ErrSession, message: "用户会话错误", status: http.StatusInternalServerError},
+	ErrUnauthenticated:  {code: ErrUnauthenticated, message: "用户未认证", status: http.StatusForbidden},
+	ErrUnauthorized:     {code: ErrUnauthorized, message: "用户未授权", status: http.StatusUnauthorized},
 }
 
 // 业务自定义错误
